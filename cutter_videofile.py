@@ -44,10 +44,20 @@ def main():
 
         # Проверяем, нужно ли сохранять текущий кадр
         if frame_count % frame_interval == 0:
+            # 1. ЗАДАЕМ НОВЫЙ РАЗМЕР (Ширина, Высота)
+            # Для нейросетей часто используют квадратные форматы, например, 640x640
+            new_size = (640, 640)
+
+            # 2. СЖИМАЕМ КАДР
+            # cv2.INTER_AREA — это лучший алгоритм интерполяции именно для уменьшения картинок
+            resized_frame = cv2.resize(frame, new_size, interpolation=cv2.INTER_AREA)
+
+            # 3. ГЕНЕРИРУЕМ ИМЯ И СОХРАНЯЕМ СЖАТЫЙ КАДР
             img_name = f"vid_{timestamp}_{saved_count:04d}.jpg"
             img_path = os.path.join(output_dir, img_name)
 
-            cv2.imwrite(img_path, frame)
+            # Сохраняем resized_frame вместо оригинального frame
+            cv2.imwrite(img_path, resized_frame)
             saved_count += 1
 
         frame_count += 1
